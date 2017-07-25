@@ -6,7 +6,6 @@ import { taskTagModel } from './TaskTag';
 import { taskRecordModel } from './TaskRecord';
 mongoose.connect(CONFIG.mongodb || 'mongodb://localhost:27017/test');
 
-
 export var db = {
     userModel,
     taskModel,
