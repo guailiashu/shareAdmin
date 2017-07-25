@@ -3,14 +3,11 @@
 在代码上 封装了路由类,因此你可以这样写代码,路由器
 
 测试改动  555
-
-
-
+测试改动  666
 
 
 ```javascript
 import { Route, RequestHandler, Request, Response } from '../route';
-
 
 export class ShareAdminRoute extends Route.BaseRoute implements Route.IRoute {
     // do 的常见几种操作
@@ -43,8 +40,6 @@ export class ShareAdminRoute extends Route.BaseRoute implements Route.IRoute {
             default:
                 return this.index;
         }
-
-
     }
 
     index(req: Request, res: Response) {
