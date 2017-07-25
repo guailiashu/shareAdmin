@@ -1,0 +1,85 @@
+{% extends './layout/admin.html'%} {%block content%}
+
+<div class="wrapper">
+    <div class="content-wrapper">
+        <div class="content-header">
+            <h1>栏目列表页<small></small></h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 栏目列表</a></li>
+                <li class="active">栏目列表</li>
+            </ol>
+        </div>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">栏目列表</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table class="table table-bordered" id="taskTable">
+                                <tr>
+                                    <th style="width: 100px">栏目_id</th>
+                                    <th>栏目标题</th>
+                                    <th>栏目排序</th>
+                                    <th>栏目的任务数量</th>
+                                    <th style="width: 100px">栏目创建时间</th>
+                                </tr>
+                                {%for taskTag in taskTags%}
+                                <tr>
+                                    <td> {{taskTag._id.toString()}}</td>
+                                    <td>{{taskTag.name}}</td>
+                                    <td>{{taskTag.sort}}</td>
+                                    <td>
+                                        {{taskNums[loop.index0]}}
+                                    </td>
+                                    <td>{{taskTag.createDt | time}}</td>
+                                    <td><a class="badge bg-green" href="/share-admin/taskTag-edit?_id={{taskTag._id.toString()}}">编辑</a>
+                                        <span class="badge bg-red" onclick="deleteTaskTag({{taskNums[loop.index0]}},'{{taskTag._id.toString()}}' )">删除</span>
+                                    </td>
+                                </tr>
+                                {%endfor%}
+
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer clearfix">
+                            <ul class="pagination pagination-sm no-margin pull-right">
+                                <li><a href="#">&laquo;</a></li>
+                                <li><a href="#">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">&raquo;</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- /.box -->
+                </div>
+
+            </div>
+
+        </section>
+    </div>
+
+
+    <!-- /.content -->
+</div>
+
+
+
+{%endblock%} {%block script%}
+<script>
+    function deleteTaskTag(taskNum, taskTagId) {
+        if (taskNum > 0) {
+            alert('请先删除下面的子栏目')
+        } else {
+            location.href = "/share-admin/taskTag-delete?_id=" + taskTagId;
+        }
+    }
+</script>
+
+{%endblock%}

@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "sourceRoot": "src",
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "allowJs": true,
+        "lib": [
+            "es2016"
+        ],
+        "experimentalDecorators": true
+    }
+}

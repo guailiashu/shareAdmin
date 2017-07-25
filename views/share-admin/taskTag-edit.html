@@ -1,0 +1,129 @@
+{% extends './layout/admin.html'%} {%block content%}
+
+<div class="wrapper">
+    <div class="content-wrapper">
+        <div class="content-header">
+            <h1>栏目详情页<small></small></h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 栏目详情</a></li>
+                <li class="active">栏目详情</li>
+            </ol>
+        </div>
+
+
+
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">栏目详情</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <form role="form" method="POST">
+                            <div class="box-body">
+                                <input type="text" name="_id" value="{{taskTag._id.toString()}}" hidden>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">栏目名字</label>
+                                    <input type="text" class="form-control" name="name" placeholder="新的栏目名称" value="{{taskTag.name}}">
+
+                                </div>
+                                <div class="form-group">
+                                    <label>栏目排序</label>
+                                    <input type="number" class="form-control" name="sort" placeholder="栏目排序" value="{{taskTag.sort}}">
+                                </div>
+
+
+                                <div class="box-footer">
+                                    <button type="submit" class="btn btn-primary">更新</button>
+                                </div>
+
+                            </div>
+                    </div>
+                    <!-- /.box-body -->
+
+                    </form>
+                </div>
+                <!-- /.box -->
+
+
+
+
+            </div>
+        </section>
+
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">栏目下的任务 {{subTasks.length}} 个</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 100px">任务_id</th>
+                                    <th>任务标题</th>
+                                    <th>任务的状态</th>
+                                    <th style="width: 100px">任务创建时间</th>
+                                </tr>
+                                {%for task in subTasks%}
+                                <tr>
+                                    <td> {{task._id.toString()}}</td>
+                                    <td>{{task.title}}</td>
+
+                                    <td>{{task.createDt | time}}</td>
+                                    <td><a class="badge bg-green" href="/share-admin/task-edit?_id={{task._id.toString()}}">编辑</a>
+                                        <span class="badge bg-red" onclick="deleteTaskTag('{{task._id.toString()}}' )">删除</span>
+                                    </td>
+                                </tr>
+                                {%endfor%}
+
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer clearfix">
+                            <ul class="pagination pagination-sm no-margin pull-right">
+                                <li><a href="#">&laquo;</a></li>
+                                <li><a href="#">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">&raquo;</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- /.box -->
+                </div>
+
+            </div>
+
+        </section>
+    </div>
+
+
+    <!-- /.content -->
+</div>
+
+
+
+{%endblock%} {%block script%}
+<script>
+    function deleteTaskTag(_id) {
+        var result = window.confirm('确定删除');
+        if (result) {
+            location.href = "/share-admin/task-delete?_id=" + _id
+        }
+
+    }
+</script>
+
+{%endblock%}

@@ -1,0 +1,133 @@
+{%extends './layout/admin.html'%} {%block title%} 编辑任务 {%endblock%} {%block content%}
+
+<div class="wrapper">
+
+    <div class="content-wrapper">
+        <div class="content-header">
+            <h1>任务详情页<small></small></h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 任务详情</a></li>
+                <li class="active">编辑任务</li>
+            </ol>
+        </div>
+
+
+
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">编辑任务</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <form role="form" method="POST">
+                            <div class="box-body">
+                                <input type="text" name="_id" value="{{task._id.toString()}}" hidden>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">任务名字</label>
+                                    <input type="text" class="form-control" name="name" placeholder="新的任务名称" value="{{task.title}}">
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">任务分类</label>
+                                    <select name="taskTag" class="form-control" required="required">
+                                        {%for taskTag in taskTags%}
+                                    <option value="{{taskTag._id.toString()}}" {%if taskTag._id.toString()==task.taskTag%} selected {%endif%}>{{taskTag.name}}</option>
+                                    {%endfor%}
+                                </select>
+
+                                </div>
+
+
+                                <div class="box-footer">
+                                    <button type="submit" class="btn btn-primary">更新</button>
+                                </div>
+
+                            </div>
+                    </div>
+                    <!-- /.box-body -->
+
+                    </form>
+                </div>
+                <!-- /.box -->
+
+
+
+
+            </div>
+        </section>
+
+
+
+        <!--任务的订单  -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">任务的订单记录 {{taskRecords.length}} 个</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 100px">订单_id</th>
+                                    <th>订单标题</th>
+                                    <th>订单的参与人数</th>
+                                    <th style="width: 100px">订单创建时间</th>
+                                    <th>操作</th>
+                                </tr>
+                                {%for taskRecord in taskRecords%}
+                                <tr>
+                                    <td> {{taskRecord._id.toString()}}</td>
+                                    <td>{{taskRecord.name}}</td>
+                                    <td>{{taskRecord.shareDetail.length}}</td>
+                                    <td>{{taskRecord.createDt | time}}</td>
+                                    <td><a class="badge bg-green" href="/share-admin/taskRecord-edit?_id={{taskRecord._id.toString()}}">编辑</a>
+                                        <span class="badge bg-red" onclick="deleteTaskRecord('{{taskRecord._id.toString()}}' )">删除</span>
+                                    </td>
+                                </tr>
+                                {%endfor%}
+
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer clearfix">
+                            <ul class="pagination pagination-sm no-margin pull-right">
+                                <li><a href="#">&laquo;</a></li>
+                                <li><a href="#">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">&raquo;</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- /.box -->
+                </div>
+
+            </div>
+
+        </section>
+    </div>
+
+
+
+
+
+
+</div>
+</section>
+
+</div>
+
+
+{%endblock%}
