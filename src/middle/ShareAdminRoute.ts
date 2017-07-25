@@ -6,27 +6,129 @@ export class ShareAdminRoute extends Route.BaseRoute implements Route.IRoute {
 
     doAction(action: string, method: string, next: RequestHandler) {
         switch (action) {
-            case 'user-list': return this.userList
+            case 'user-list': return this.userList;//分页
+            case 'main-info': return this.mainInfo;
             case 'index': return this.index;
             case 'task-delete': return this.taskDelete;
             case 'task-edit': return this.taskEdit;
-            case 'taskTag-list': return this.taskTagList;
-            case 'taskTag-edit': return this.GET == method ? this.taskTagEditPage : this.taskTagEdit
-            case "taskTag-delete": return this.taskTagDelete;
+            case 'taskTag-list': return this.taskTagList;//栏目信息
+            case 'taskTag': switch (method) {//详情页
+                case 'get': return this.taskTagDetail;
+                case 'post': return this.taskTagNew;
+                case 'put': return this.taskTagUpdate;
+                default: return this.taskTagDelete;//删除
+            }
+            //case "taskTag-delete": return this.taskTagDelete;
             case 'taskRecord-edit': return this.taskRecordEdit;
             case 'task-list': return this.taskList;
+
             default: return this.index;
         }
     }
-    async userList() {
+    async taskTagDetail() {//get提交
+        let taskTag = await this.db.taskTagModel.findById({ _id: this.req.query._id }).exec();
+        let subTasks = await this.db.taskModel.find({ taskTag: taskTag._id.toString() }).exec();//子栏目
+        if (taskTag) {
+            this.res.json({
+                ok: true,
+                data: {
+                    taskTag,
+                    subTasks
+                }
+            });
+
+        } else {
+            this.res.json({
+                ok: false,
+                data: '该栏目不存在,请传入参数正确的id'
+            });
+        }
+
+    }
+    async taskTagNew() {//新增 ,post提交
+
+        let taskTag = await this.db.taskTagModel.findById({ _id: this.req.query._id }).exec();
+        let subTasks = await this.db.taskModel.find({ taskTag: taskTag._id.toString() }).exec();//子栏目
+        if (taskTag) {
+            this.res.json({
+                ok: true,
+                data: {
+                    taskTag,
+                    subTasks
+                }
+            });
+
+        } else {
+            this.res.json({
+                ok: false,
+                data: '该栏目不存在,请传入参数正确的id'
+            });
+        }
+
+    }
+
+    async taskTagUpdate() { //更新
+        let taskTag = await this.db.taskTagModel.findById({ _id: this.req.query._id }).exec();
+        let subTasks = await this.db.taskModel.find({ taskTag: taskTag._id.toString() }).exec();//子栏目
+        if (taskTag) {
+            this.res.json({
+                ok: true,
+                data: {
+                    taskTag,
+                    subTasks
+                }
+            });
+
+        } else {
+            this.res.json({
+                ok: false,
+                data: '该栏目不存在,请传入参数正确的id'
+            });
+        }
+    }
+
+    async taskTagDelete(req: Request, res: Response) {//删除
+        let taskTag = await this.db.taskTagModel.findById(this.req.query._id).exec();
+        let subTaskCount = await this.db.taskModel.find({ taskTag: taskTag._id.toString() }).count().exec();//子类数量
+        if (subTaskCount > 0) {
+            res.json({
+                ok: false,
+                data: '请先该栏目下的子任务'
+            })
+        } else {
+            let deleteAction = await this.db.taskTagModel.findByIdAndRemove(this.req.query._id).exec();
+            res.json({ ok: true, data: deleteAction });
+        }
+
+
+    }
+
+    async userList() {//分页
         let page = this.req.query.page || 0;
         let users = await this.db.userModel.find().skip(10 * page).limit(10).exec();
-        this.res.json({ ok: true, data: users });
+        let count = await this.db.userModel.find().count().exec();
+        this.res.json({ ok: true, data: { users, count } });
     }
+    async mainInfo() {
+        let userCount = await this.db.userModel.find().count().exec();
+        let taskTagCount = await this.db.taskTagModel.find().count().exec();
+        let activeTaskCount = await this.db.taskModel.find({ active: true }).count().exec();
+        let unActiveTaskCount = await this.db.taskModel.find({ active: false }).count().exec();
+        this.res.json({
+            ok: true,
+            data: {
+                userCount,//用户总数
+                taskTagCount,//栏目分类总数
+                activeTaskCount,//已经上架的总数
+                unActiveTaskCount,//已经下架的总数
+            }
+        })
+    }
+
     async taskList() {
         let tasks = await this.db.taskModel.find(this.req.query).populate('publisher').exec();
-
-        this.render('task-list', { tasks });
+        let count = await this.db.taskModel.find().count().exec();
+        this.res.json({ ok: true, data: { tasks, count } });
     }
 
     before() {
@@ -100,10 +202,7 @@ export class ShareAdminRoute extends Route.BaseRoute implements Route.IRoute {
         var recordNum = await this.service.db.taskRecordModel.find().count().exec();
         this.res.render(`share-admin/index`, { taskTagNum, taskNum, taskActiveNum, recordNum });
     }
-    async taskTagDelete(req: Request, res: Response) {
-        let action = await this.service.db.taskTagModel.findByIdAndRemove(req.query._id).exec();
-        res.redirect(`/share-admin/taskTag-list`);
-    }
+
     async taskDelete(req: Request, res: Response) {
         var _id = req.query._id;
         let action = await this.service.db.taskModel.findByIdAndRemove(_id).exec();
@@ -112,7 +211,7 @@ export class ShareAdminRoute extends Route.BaseRoute implements Route.IRoute {
 
 
 
-    async taskTagList() {
+    async taskTagList() {//栏目信息
         var taskTags = await this.db.taskTagModel.find().exec();
         var taskNums = [];
         for (let taskTag of taskTags) {
@@ -121,8 +220,17 @@ export class ShareAdminRoute extends Route.BaseRoute implements Route.IRoute {
             taskNums.push(taskNum);
         }
 
-        this.render('taskTag-list', { taskTags, taskNums });
+        //     this.josn('taskTag-list', { taskTags, taskNums });
+        // }
+
+        this.res.json({
+            ok: true,
+            data: {
+                taskTags, taskNums
+            }
+        })
     }
+
 
 
     async taskTagNewPageDo(req: Request, res: Response) {
