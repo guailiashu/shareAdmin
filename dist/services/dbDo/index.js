@@ -13,7 +13,7 @@ module.exports = {
         var shareDetail = orders.map(order => { return { user: order.userId, money: order.money }; });
         // 每次插入一个订单
         let taskRecord = { task: order.task, shareDetail: shareDetail, totalFee: totalFee };
-        console.log(taskRecord);
+        // console.log(taskRecord);
         await new models_1.db.taskRecordModel(taskRecord).save();
     }
 };

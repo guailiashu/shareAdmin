@@ -12,3 +12,4 @@ export { WechatRoute } from './WechatRoute';
 export { ApiRoute } from './ApiRoute';
 export { ShareAdminRoute } from './ShareAdminRoute';
 
+export { ShareManageRoute } from './ShareManageRoute';

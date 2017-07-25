@@ -16,6 +16,7 @@ export class CommonMiddle extends Middleware.BaseMiddleware {
             middlewares.push(this.staticServer(dir))
         }
         middlewares.push(logger('dev'));
+        middlewares.push(this.crossDomain);
         middlewares.push(bodyParser.json({ limit: '50mb' }));
         middlewares.push(bodyParser.urlencoded({ extended: false }));
         middlewares.push(session({

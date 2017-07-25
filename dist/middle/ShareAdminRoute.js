@@ -10,7 +10,7 @@ const route_1 = require("../route");
 let ShareAdminRoute = class ShareAdminRoute extends route_1.Route.BaseRoute {
     doAction(action, method, next) {
         switch (action) {
-            case 'login': return this.GET == method ? this.loginPage : this.login;
+            case 'user-list': return this.userList;
             case 'index': return this.index;
             case 'task-delete': return this.taskDelete;
             case 'task-edit': return this.taskEdit;
@@ -22,17 +22,21 @@ let ShareAdminRoute = class ShareAdminRoute extends route_1.Route.BaseRoute {
             default: return this.index;
         }
     }
+    async userList() {
+        let page = this.req.query.page || 0;
+        let users = await this.db.userModel.find().skip(10 * page).limit(10).exec();
+        this.res.json({ ok: true, data: users });
+    }
     async taskList() {
         let tasks = await this.db.taskModel.find(this.req.query).populate('publisher').exec();
         this.render('task-list', { tasks });
     }
     before() {
-        if (this.req.session.admin || this.req.baseUrl == '/share-admin/login') {
-            this.next();
-        }
-        else {
-            this.res.redirect('/share-admin/login');
-        }
+        // if (this.req.session.admin || this.req.baseUrl == '/share-admin/login') {
+        this.next();
+        // } else {
+        // this.res.redirect('/share-admin/login')
+        // }
     }
     after() { }
     async taskRecordEdit() {
@@ -64,6 +68,7 @@ let ShareAdminRoute = class ShareAdminRoute extends route_1.Route.BaseRoute {
         this.res.render('share-admin/taskTag-edit', { taskTag, subTasks });
     }
     login() {
+        ``;
         let { username, password } = this.req.body;
         console.log(username, password);
         if (username == 'admin' && password == '123') {

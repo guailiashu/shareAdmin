@@ -1,12 +1,12 @@
 import { Route, RequestHandler, Request, Response } from '../route';
 
 
-@Route.Views('share-admin')
-export class ShareAdminRoute extends Route.BaseRoute implements Route.IRoute {
+@Route.Views('share-manage')
+export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
 
     doAction(action: string, method: string, next: RequestHandler) {
         switch (action) {
-            case 'user-list': return this.userList
+            case 'login': return this.GET == method ? this.loginPage : this.login;
             case 'index': return this.index;
             case 'task-delete': return this.taskDelete;
             case 'task-edit': return this.taskEdit;
@@ -18,11 +18,6 @@ export class ShareAdminRoute extends Route.BaseRoute implements Route.IRoute {
             default: return this.index;
         }
     }
-    async userList() {
-        let page = this.req.query.page || 0;
-        let users = await this.db.userModel.find().skip(10 * page).limit(10).exec();
-        this.res.json({ ok: true, data: users });
-    }
     async taskList() {
         let tasks = await this.db.taskModel.find(this.req.query).populate('publisher').exec();
 
@@ -30,11 +25,11 @@ export class ShareAdminRoute extends Route.BaseRoute implements Route.IRoute {
     }
 
     before() {
-        // if (this.req.session.admin || this.req.baseUrl == '/share-admin/login') {
-        this.next();
-        // } else {
-        // this.res.redirect('/share-admin/login')
-        // }
+        if (this.req.session.admin || this.req.baseUrl == '/share-admin/login') {
+            this.next();
+        } else {
+            this.res.redirect('/share-admin/login')
+        }
     }
 
     after() { }

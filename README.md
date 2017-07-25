@@ -3,10 +3,9 @@
 在代码上 封装了路由类,因此你可以这样写代码,路由器
 
 
-萨顶顶
-dsad s
 
-这是张超写的代码
+
+
 
 ```javascript
 import { Route, RequestHandler, Request, Response } from '../route';

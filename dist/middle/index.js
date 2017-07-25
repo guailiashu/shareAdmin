@@ -13,3 +13,5 @@ var ApiRoute_1 = require("./ApiRoute");
 exports.ApiRoute = ApiRoute_1.ApiRoute;
 var ShareAdminRoute_1 = require("./ShareAdminRoute");
 exports.ShareAdminRoute = ShareAdminRoute_1.ShareAdminRoute;
+var ShareManageRoute_1 = require("./ShareManageRoute");
+exports.ShareManageRoute = ShareManageRoute_1.ShareManageRoute;

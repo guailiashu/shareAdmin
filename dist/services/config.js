@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
 const fs = require("fs");
 exports.CONFIG = {
-    port: 27018,
+    port: 80,
     oldAuth: 'shop.xxbuy.net',
     uploadDir: path.resolve(__dirname, '../../public/upload'),
     newAuth: '',

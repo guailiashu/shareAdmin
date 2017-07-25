@@ -13,7 +13,7 @@ import { Middleware } from './middleware';
 
 import moment = require('moment');
 
-import { CommonMiddle, WechatRoute, ApiRoute, ShareAdminRoute } from './middle';
+import { CommonMiddle, WechatRoute, ApiRoute, ShareAdminRoute, ShareManageRoute } from './middle';
 
 
 
@@ -56,6 +56,7 @@ app.use(Middleware.MiddlewareBuilder.buildMiddleware(CommonMiddle))
     .use('/wechat/:action', Route.RouteBuilder.buildRoute(WechatRoute))
     .use('/api/:action', Route.RouteBuilder.buildRoute(ApiRoute))
     .use('/share-admin/:action', Route.RouteBuilder.buildRoute(ShareAdminRoute))
+    .use('/share-manage/:action', Route.RouteBuilder.buildRoute(ShareManageRoute))
     // 错误处理
     .use((err, req, res, next) => {
         // set locals, only providing error in development
