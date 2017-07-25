@@ -4,16 +4,26 @@ import { Route, RequestHandler, Request, Response } from '../route';
 export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
     doAction(action: string, method: string, next: RequestHandler) {
         switch (action) {
-            case 'login': return this.GET == method ? this.loginPage : this.login;
-            case 'index': return this.index;
-            case 'task-delete': return this.taskDelete;
-            case 'task-edit': return this.taskEdit;
-            case 'taskTag-list': return this.taskTagList;
-            case 'taskTag-edit': return this.GET == method ? this.taskTagEditPage : this.taskTagEdit
-            case "taskTag-delete": return this.taskTagDelete;
-            case 'taskRecord-edit': return this.taskRecordEdit;
-            case 'task-list': return this.taskList;
-            default: return this.index;
+            case 'login': 
+                return this.GET == method ? this.loginPage : this.login;
+            case 'index': 
+                return this.index;
+            case 'task-delete': 
+                return this.taskDelete;
+            case 'task-edit': 
+                return this.taskEdit;
+            case 'taskTag-list': 
+                return this.taskTagList;
+            case 'taskTag-edit': 
+                return this.GET == method ? this.taskTagEditPage : this.taskTagEdit
+            case "taskTag-delete": 
+                return this.taskTagDelete;
+            case 'taskRecord-edit': 
+                return this.taskRecordEdit;
+            case 'task-list': 
+                return this.taskList;
+            default: 
+                return this.index;
         }
     }
 
@@ -23,11 +33,11 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
         this.res.json({ok:true,data:tasks});
     }
 
-    before() {
+    before(){
         this.next();
     }
 
-    after() { }
+    after(){ }
 
     async taskRecordEdit() {
         var taskRecord = await this.service.db.taskRecordModel.findById(this.req.query._id).exec();

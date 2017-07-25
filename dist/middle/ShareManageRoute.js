@@ -10,16 +10,26 @@ const route_1 = require("../route");
 let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
     doAction(action, method, next) {
         switch (action) {
-            case 'login': return this.GET == method ? this.loginPage : this.login;
-            case 'index': return this.index;
-            case 'task-delete': return this.taskDelete;
-            case 'task-edit': return this.taskEdit;
-            case 'taskTag-list': return this.taskTagList;
-            case 'taskTag-edit': return this.GET == method ? this.taskTagEditPage : this.taskTagEdit;
-            case "taskTag-delete": return this.taskTagDelete;
-            case 'taskRecord-edit': return this.taskRecordEdit;
-            case 'task-list': return this.taskList;
-            default: return this.index;
+            case 'login':
+                return this.GET == method ? this.loginPage : this.login;
+            case 'index':
+                return this.index;
+            case 'task-delete':
+                return this.taskDelete;
+            case 'task-edit':
+                return this.taskEdit;
+            case 'taskTag-list':
+                return this.taskTagList;
+            case 'taskTag-edit':
+                return this.GET == method ? this.taskTagEditPage : this.taskTagEdit;
+            case "taskTag-delete":
+                return this.taskTagDelete;
+            case 'taskRecord-edit':
+                return this.taskRecordEdit;
+            case 'task-list':
+                return this.taskList;
+            default:
+                return this.index;
         }
     }
     async taskList() {
