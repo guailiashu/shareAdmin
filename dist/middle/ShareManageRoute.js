@@ -24,15 +24,10 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
     }
     async taskList() {
         let tasks = await this.db.taskModel.find(this.req.query).populate('publisher').exec();
-        this.render('task-list', { tasks });
+        this.res.json({ ok: true, data: tasks });
     }
     before() {
-        if (this.req.session.admin || this.req.baseUrl == '/share-admin/login') {
-            this.next();
-        }
-        else {
-            this.res.redirect('/share-admin/login');
-        }
+        this.next();
     }
     after() { }
     async taskRecordEdit() {
@@ -64,7 +59,6 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         this.res.render('share-admin/taskTag-edit', { taskTag, subTasks });
     }
     login() {
-        ``;
         let { username, password } = this.req.body;
         console.log(username, password);
         if (username == 'admin' && password == '123') {

@@ -1,9 +1,7 @@
 import { Route, RequestHandler, Request, Response } from '../route';
 
-
 @Route.Views('share-manage')
 export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
-
     doAction(action: string, method: string, next: RequestHandler) {
         switch (action) {
             case 'login': return this.GET == method ? this.loginPage : this.login;
@@ -18,21 +16,19 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
             default: return this.index;
         }
     }
+
     async taskList() {
         let tasks = await this.db.taskModel.find(this.req.query).populate('publisher').exec();
 
-        this.render('task-list', { tasks });
+        this.res.json({ok:true,data:tasks});
     }
 
     before() {
-        if (this.req.session.admin || this.req.baseUrl == '/share-admin/login') {
-            this.next();
-        } else {
-            this.res.redirect('/share-admin/login')
-        }
+        this.next();
     }
 
     after() { }
+
     async taskRecordEdit() {
         var taskRecord = await this.service.db.taskRecordModel.findById(this.req.query._id).exec();
         let orders = taskRecord.shareDetail;
@@ -67,7 +63,6 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
     }
 
     login() {
-        ``
         let { username, password } = this.req.body;
         console.log(username, password);
         if (username == 'admin' && password == '123') {
@@ -86,7 +81,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
 
     }
 
-    async  index(req: Request, res: Response) {
+    async index(req: Request, res: Response) {
         // 任务标签总数
         var taskTagNum = await this.service.db.taskTagModel.find().count().exec();
         // 任务数量
