@@ -2,13 +2,13 @@ import {Route, RequestHandler, Request, Response} from '../route';
 
 @Route.Views('share-manage')
 export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
-    doAction(action: string, method: string, next: RequestHandler) {
+    doAction(action:string, method:string, next:RequestHandler){
         switch(action){
             case 'login':
                 return this.GET == method ? this.loginPage : this.login;
-            case 'index':
-                return this.index;
-            case 'task-delete': 
+            case 'system-log':
+                return this.systemLog;
+            case 'task-delete':
                 return this.taskDelete;
             case 'task-edit': 
                 return this.taskEdit;
@@ -30,13 +30,33 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
     before(){
         this.next();
     }
-
     after(){}
 
+    async systemLog(){
+        let today = new Date();
+        //昨天的起始时间 00:00:00
+        let yesStart = new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime()-24*60*60*1000;
+        let yesEnd = yesStart+24*60*60*1000;
+        //今天的起始时间 00:00:00
+        let todayStart = new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime();
+        let todayEnd = todayStart+24*60*60*1000;
+
+        //console.log(`todayStart:${todayStart}, todayEnd:${todayEnd}`);
+        //console.log(new Date(today.getFullYear(),today.getMonth(),today.getDate()));
+
+        let yesSignupCount = await this.db.userModel.find().where('createDt').gt(yesStart).lt(yesEnd).count().exec();
+        let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
+        this.res.json({
+            ok:true,
+            data:{
+                yesSignupCount,
+                todaySignupCount
+            }
+        })    
+    }
+
     async taskList(){
-        console.log(111);
         let tasks = await this.db.taskModel.find(this.req.query).populate('publisher').exec();
-        // this.res.json({ok:true,data:111});
         this.res.json({ok:true,data:tasks});
     }
 
@@ -77,14 +97,14 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
     login(){
         let {username, password} = this.req.body;
         console.log(username, password);
-        if (username == 'admin' && password == '123') {
+        if(username == 'admin' && password == '123'){
             this.req.session.admin = {
                 username,
                 password
             };
             this.res.redirect('/share-admin/index')
-        } else {
-            this.res.render('share-admin/login', { errorMsg: '用户名或密码不正确' });
+        }else{
+            this.res.render('share-admin/login', {errorMsg: '用户名或密码不正确'});
         }
     }
 
