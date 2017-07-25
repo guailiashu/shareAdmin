@@ -11,7 +11,6 @@ export class WechatRoute extends Route.BaseRoute implements Route.IRoute {
                 return this.oauth;
             case 'jssdk':
                 return this.getJSSDKSignature;
-
             default:
                 return this.notFound;
         }

@@ -1,5 +1,6 @@
 import mongoose = require('mongoose');
 import { IUser } from './User';
+
 var taskSchema = new mongoose.Schema({
     title: String,
     // 余额

@@ -11,7 +11,6 @@ var taskRecordSchema = new mongoose.Schema({
         }
     },
     createDt: { type: Date, default: Date.now },
-
 });
 
 
