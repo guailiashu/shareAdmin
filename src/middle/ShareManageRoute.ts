@@ -54,6 +54,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
     async systemLog(){
         let today = new Date();
         let currentTime = new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime();
+        console.log(new Date(today.getFullYear(),today.getMonth(),today.getDate()));
         //昨天的起始时间 00:00:00
         let yesStart = currentTime-24*60*60*1000;
         let yesEnd = currentTime;
