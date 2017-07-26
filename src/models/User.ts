@@ -39,6 +39,7 @@ export interface IUser extends mongoose.Document {
 } 
 */
 export var userModel = mongoose.model<IUser>('User', new mongoose.Schema({
+
     //微信数据
     nickname: String,
     openid: String,

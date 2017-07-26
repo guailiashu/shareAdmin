@@ -71,7 +71,10 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
 
     async taskList(){
         let tasks = await this.db.taskModel.find(this.req.query).populate('publisher').exec();
-        this.res.json({ok:true,data:tasks});
+        this.res.json({
+            ok:true,
+            data:tasks
+        });
     }
 
     async taskRecordEdit(){
@@ -93,12 +96,12 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
 
         var taskRecords = await this.service.db.taskRecordModel.find({ task: task._id.toString() }).exec();
         console.log(taskRecords);
-        this.res.render('share-admin/task-edit', {task, taskRecords, taskTags });
+        this.res.render('share-admin/task-edit', {task, taskRecords, taskTags});
     }
 
     async taskTagEdit(){
         let {_id, name, sort} = this.req.body;
-        await this.service.db.taskTagModel.findByIdAndUpdate(_id, { $set: { name, sort } }).exec();
+        await this.service.db.taskTagModel.findByIdAndUpdate(_id, {$set:{name,sort}}).exec();
         this.res.redirect('/share-admin/taskTag-list');
     }
 
@@ -116,14 +119,14 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
                 username,
                 password
             };
-            this.res.redirect('/share-admin/index')
+            this.res.redirect('/share-admin/index');
         }else{
             this.res.render('share-admin/login', {errorMsg:'用户名或密码不正确'});
         }
     }
 
     loginPage(){
-        this.res.render('share-admin/login')
+        this.res.render('share-admin/login');
     }
 
     async index(req:Request, res:Response){
