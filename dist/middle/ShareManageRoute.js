@@ -48,7 +48,7 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
     }
     after() { }
     async rechargeList() {
-        var rechargeLists = await this.db.wxRechargeRecordModel.find().populate('user').sort({ createDt: -1 }).exec();
+        let rechargeLists = await this.db.wxRechargeRecordModel.find().populate('user').sort({ createDt: -1 }).exec();
         this.res.json({
             ok: true,
             data: rechargeLists
