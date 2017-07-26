@@ -40,15 +40,19 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
         //今天的起始时间 00:00:00
         let todayStart = new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime();
         let todayEnd = todayStart+24*60*60*1000;
+        let weekStart = new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime()-7*24*60*60*1000;
+        let weekEnd = todayEnd;
+
         //console.log(`todayStart:${todayStart}, todayEnd:${todayEnd}`);
         let yesSignupCount = await this.db.userModel.find().where('createDt').gt(yesStart).lt(yesEnd).count().exec();
         let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
         let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(todayStart).lt(todayEnd).exec();
         let yesTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(yesEnd).exec();
-        let weekTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(yesEnd).exec();
+        let weekTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(weekStart).lt(weekEnd).exec();
         
         let activeUsers = [];
         let yesActiveUsers = [];
+        let weekActiveUsers = [];
 
         todayTaskRecords.forEach(record=>{
             //console.log(record.shareDetail[0].user);
@@ -66,22 +70,33 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
                 yesActiveUsers.push(yesRecord.shareDetail[0].user);
             }
         });
+        weekTaskRecords.forEach(weekRecord=>{
+            //console.log(record.shareDetail[0].user);
+            if(weekActiveUsers.includes(weekRecord.shareDetail[0].user)){
+
+            }else{
+                weekActiveUsers.push(weekRecord.shareDetail[0].user);
+            }
+        });
+
         let totalNum = await this.db.userModel.find().count();
         
         this.res.json({
             ok:true,
             data:{
-                yesSignupCount, //昨日关注人数
-                todaySignupCount, //今日关注人数
-                todayActiveUserNum:activeUsers.length, //今日活跃人数
-                yesActiveUserNum:yesActiveUsers.length, //昨日活跃人数
-                totalNum //累计关注人数
+                yesSignupCount,  //昨日关注人数
+                todaySignupCount,  //今日关注人数
+                todayActiveUserNum:activeUsers.length,  //今日活跃人数
+                yesActiveUserNum:yesActiveUsers.length,  //昨日活跃人数
+                weekActiveUserNum:weekActiveUsers.length,  //本周活跃人数
+                totalNum  //累计关注人数
             }
         })
     }
 
     async taskList(){
         let tasks = await this.db.taskModel.find(this.req.query).populate('publisher').exec();
+        console.log(111,tasks);
         this.res.json({
             ok:true,
             data:tasks
@@ -146,7 +161,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
         var taskNum = await this.service.db.taskTagModel.find().count().exec();
         var taskActiveNum = await this.service.db.taskTagModel.find({ active: true }).count().exec();
         var recordNum = await this.service.db.taskRecordModel.find().count().exec();
-        this.res.render(`share-admin/index`, { taskTagNum, taskNum, taskActiveNum, recordNum });
+        this.res.render(`share-admin/index`, {taskTagNum, taskNum, taskActiveNum, recordNum});
     }
 
     async taskTagDelete(req:Request, res:Response){

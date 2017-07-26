@@ -44,14 +44,17 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         //今天的起始时间 00:00:00
         let todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
         let todayEnd = todayStart + 24 * 60 * 60 * 1000;
+        let weekStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime() - 7 * 24 * 60 * 60 * 1000;
+        let weekEnd = todayEnd;
         //console.log(`todayStart:${todayStart}, todayEnd:${todayEnd}`);
         let yesSignupCount = await this.db.userModel.find().where('createDt').gt(yesStart).lt(yesEnd).count().exec();
         let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
         let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(todayStart).lt(todayEnd).exec();
         let yesTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(yesEnd).exec();
-        let weekTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(yesEnd).exec();
+        let weekTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(weekStart).lt(weekEnd).exec();
         let activeUsers = [];
         let yesActiveUsers = [];
+        let weekActiveUsers = [];
         todayTaskRecords.forEach(record => {
             //console.log(record.shareDetail[0].user);
             if (activeUsers.includes(record.shareDetail[0].user)) {
@@ -68,6 +71,14 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
                 yesActiveUsers.push(yesRecord.shareDetail[0].user);
             }
         });
+        weekTaskRecords.forEach(weekRecord => {
+            //console.log(record.shareDetail[0].user);
+            if (weekActiveUsers.includes(weekRecord.shareDetail[0].user)) {
+            }
+            else {
+                weekActiveUsers.push(weekRecord.shareDetail[0].user);
+            }
+        });
         let totalNum = await this.db.userModel.find().count();
         this.res.json({
             ok: true,
@@ -76,12 +87,14 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
                 todaySignupCount,
                 todayActiveUserNum: activeUsers.length,
                 yesActiveUserNum: yesActiveUsers.length,
+                weekActiveUserNum: weekActiveUsers.length,
                 totalNum //累计关注人数
             }
         });
     }
     async taskList() {
         let tasks = await this.db.taskModel.find(this.req.query).populate('publisher').exec();
+        console.log(111, tasks);
         this.res.json({
             ok: true,
             data: tasks
