@@ -45,7 +45,6 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
 
     async rechargeList(){
         let rechargeLists = await this.db.wxRechargeRecordModel.find().populate('user').sort({createDt:-1}).exec();
-
         this.res.json({
             ok:true,
             data:rechargeLists
