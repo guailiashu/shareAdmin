@@ -28,8 +28,8 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
                 return this.taskRecordEdit;
             case 'task-list':
                 return this.taskList;
-            case 'rechargeRecord-list':
-                return this.rechargeRecordList;
+            case 'recharge-list':
+                return this.rechargeList;
             default:
                 return this.index;
         }
@@ -38,10 +38,10 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         this.next();
     }
     after() { }
-    async rechargeRecordList() {
+    async rechargeList() {
         this.res.json({
             ok: true,
-            data: 111
+            data: 555
         });
     }
     async systemLog() {

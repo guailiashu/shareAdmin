@@ -22,8 +22,8 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
                 return this.taskRecordEdit;
             case 'task-list':
                 return this.taskList;
-            case 'rechargeRecord-list':
-                return this.rechargeRecordList;
+            case 'recharge-list':
+                return this.rechargeList;
             default:
                 return this.index;
         }
@@ -34,13 +34,13 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
     }
     after(){}
 
-    async rechargeRecordList(){
-        
+    async rechargeList(){
+
 
 
         this.res.json({
             ok:true,
-            data:111
+            data:555
         });
     }
 
