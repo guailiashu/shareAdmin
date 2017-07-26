@@ -38,16 +38,47 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
     after() { }
     async systemLog() {
         let today = new Date();
+        let currentTime = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+        console.log(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
         //昨天的起始时间 00:00:00
         let yesStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime() - 24 * 60 * 60 * 1000;
         let yesEnd = yesStart + 24 * 60 * 60 * 1000;
         //今天的起始时间 00:00:00
         let todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
         let todayEnd = todayStart + 24 * 60 * 60 * 1000;
-        //console.log(`todayStart:${todayStart}, todayEnd:${todayEnd}`);
-        //console.log(new Date(today.getFullYear(),today.getMonth(),today.getDate()));
         let yesSignupCount = await this.db.userModel.find().where('createDt').gt(yesStart).lt(yesEnd).count().exec();
         let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
+        let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(todayStart).lt(todayEnd).exec();
+        let yesTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(yesEnd).exec();
+        let weekTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(weekStart).lt(weekEnd).exec();
+        let activeUsers = [];
+        let yesActiveUsers = [];
+        let weekActiveUsers = [];
+        todayTaskRecords.forEach(record => {
+            //console.log(record.shareDetail[0].user);
+            if (activeUsers.includes(record.shareDetail[0].user)) {
+            }
+            else {
+                activeUsers.push(record.shareDetail[0].user);
+            }
+        });
+        yesTaskRecords.forEach(yesRecord => {
+            //console.log(record.shareDetail[0].user);
+            if (yesActiveUsers.includes(yesRecord.shareDetail[0].user)) {
+            }
+            else {
+                yesActiveUsers.push(yesRecord.shareDetail[0].user);
+            }
+        });
+        weekTaskRecords.forEach(weekRecord => {
+            //console.log(record.shareDetail[0].user);
+            if (weekActiveUsers.includes(weekRecord.shareDetail[0].user)) {
+            }
+            else {
+                weekActiveUsers.push(weekRecord.shareDetail[0].user);
+            }
+        });
+        let totalNum = await this.db.userModel.find().count();
         this.res.json({
             ok: true,
             data: {

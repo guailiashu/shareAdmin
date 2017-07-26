@@ -1,9 +1,7 @@
 import { Route, RequestHandler, Request, Response } from '../route';
 
-
 @Route.Views('share-admin')
 export class ShareAdminRoute extends Route.BaseRoute implements Route.IRoute {
-
     doAction(action: string, method: string, next: RequestHandler) {
         switch (action) {
             case 'user-list': return this.userList;//分页

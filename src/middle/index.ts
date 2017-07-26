@@ -6,10 +6,10 @@
 // import rest = require('./rest');
 // import share = require('./share');
 
-export { CommonMiddle } from './CommonMiddle';
+export {CommonMiddle} from './CommonMiddle';
 
-export { WechatRoute } from './WechatRoute';
-export { ApiRoute } from './ApiRoute';
-export { ShareAdminRoute } from './ShareAdminRoute';
+export {WechatRoute} from './WechatRoute';
+export {ApiRoute} from './ApiRoute';
+export {ShareAdminRoute} from './ShareAdminRoute';
 
-export { ShareManageRoute } from './ShareManageRoute';
+export {ShareManageRoute} from './ShareManageRoute';
