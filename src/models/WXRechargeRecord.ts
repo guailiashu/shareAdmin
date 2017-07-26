@@ -1,7 +1,5 @@
 import mongoose = require('mongoose');
 
-
-
 var wxRechargeRecordSchema = new mongoose.Schema({
     body: String,
     attach: String,
@@ -12,9 +10,9 @@ var wxRechargeRecordSchema = new mongoose.Schema({
     trade_type: { type: String, default: 'JSAPI' },
     createDt: { type: Date, default: Date.now },
     //是否已经退款
+    user: {type:mongoose.Schema.Types.ObjectId, ref:'User'},
     isRefund: { type: Boolean, default: false }
 });
-
 
 export interface IRechargeRecord extends mongoose.Document {
     body: string;
@@ -27,6 +25,5 @@ export interface IRechargeRecord extends mongoose.Document {
     createDt: Date;
     isRefund: Boolean;
 }
-
 
 export var wxRechargeRecordModel = mongoose.model<IRechargeRecord>('WXRechargeRecord', wxRechargeRecordSchema);

@@ -11,6 +11,7 @@ var wxRechargeRecordSchema = new mongoose.Schema({
     trade_type: { type: String, default: 'JSAPI' },
     createDt: { type: Date, default: Date.now },
     //是否已经退款
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     isRefund: { type: Boolean, default: false }
 });
 exports.wxRechargeRecordModel = mongoose.model('WXRechargeRecord', wxRechargeRecordSchema);
