@@ -49,8 +49,9 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
         let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(todayStart).lt(todayEnd).exec();
         let yesTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(yesEnd).exec();
+        let weekTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(yesEnd).exec();
         let activeUsers = [];
-        let yesactiveUsers = [];
+        let yesActiveUsers = [];
         todayTaskRecords.forEach(record => {
             //console.log(record.shareDetail[0].user);
             if (activeUsers.includes(record.shareDetail[0].user)) {
@@ -59,12 +60,12 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
                 activeUsers.push(record.shareDetail[0].user);
             }
         });
-        yesTaskRecords.forEach(yesrecord => {
+        yesTaskRecords.forEach(yesRecord => {
             //console.log(record.shareDetail[0].user);
-            if (yesactiveUsers.includes(yesrecord.shareDetail[0].user)) {
+            if (yesActiveUsers.includes(yesRecord.shareDetail[0].user)) {
             }
             else {
-                yesactiveUsers.push(yesrecord.shareDetail[0].user);
+                yesActiveUsers.push(yesRecord.shareDetail[0].user);
             }
         });
         let totalNum = await this.db.userModel.find().count();
@@ -73,8 +74,8 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
             data: {
                 yesSignupCount,
                 todaySignupCount,
-                todayactiveUserNum: activeUsers.length,
-                yesactiveUserNum: yesactiveUsers.length,
+                todayActiveUserNum: activeUsers.length,
+                yesActiveUserNum: yesActiveUsers.length,
                 totalNum //累计关注人数
             }
         });

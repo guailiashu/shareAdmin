@@ -45,9 +45,10 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
         let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
         let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(todayStart).lt(todayEnd).exec();
         let yesTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(yesEnd).exec();
+        let weekTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(yesEnd).exec();
         
         let activeUsers = [];
-        let yesactiveUsers = [];
+        let yesActiveUsers = [];
 
         todayTaskRecords.forEach(record=>{
             //console.log(record.shareDetail[0].user);
@@ -57,12 +58,12 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
                 activeUsers.push(record.shareDetail[0].user);
             }
         });
-        yesTaskRecords.forEach(yesrecord=>{
+        yesTaskRecords.forEach(yesRecord=>{
             //console.log(record.shareDetail[0].user);
-            if(yesactiveUsers.includes(yesrecord.shareDetail[0].user)){
+            if(yesActiveUsers.includes(yesRecord.shareDetail[0].user)){
 
             }else{
-                yesactiveUsers.push(yesrecord.shareDetail[0].user);
+                yesActiveUsers.push(yesRecord.shareDetail[0].user);
             }
         });
         let totalNum = await this.db.userModel.find().count();
@@ -72,8 +73,8 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
             data:{
                 yesSignupCount, //昨日关注人数
                 todaySignupCount, //今日关注人数
-                todayactiveUserNum:activeUsers.length, //今日活跃人数
-                yesactiveUserNum:yesactiveUsers.length, //昨日活跃人数
+                todayActiveUserNum:activeUsers.length, //今日活跃人数
+                yesActiveUserNum:yesActiveUsers.length, //昨日活跃人数
                 totalNum //累计关注人数
             }
         })
