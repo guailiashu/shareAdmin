@@ -35,7 +35,8 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
     before() {
         this.next();
     }
-    after() { }
+    after() {
+    }
     async systemLog() {
         let today = new Date();
         //昨天的起始时间 00:00:00
