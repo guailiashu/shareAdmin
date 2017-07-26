@@ -45,6 +45,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
         let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
         let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(todayEnd).exec();
         let activeUsers = [];
+        
         todayTaskRecords.forEach(record=>{
             //console.log(record.shareDetail[0].user);
             if(activeUsers.includes(record.shareDetail[0].user)){
