@@ -28,6 +28,8 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
                 return this.taskRecordEdit;
             case 'task-list':
                 return this.taskList;
+            case 'rechargeRecord-list':
+                return this.rechargeRecordList;
             default:
                 return this.index;
         }
@@ -36,6 +38,12 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         this.next();
     }
     after() { }
+    async rechargeRecordList() {
+        this.res.json({
+            ok: true,
+            data: 111
+        });
+    }
     async systemLog() {
         let today = new Date();
         //昨天的起始时间 00:00:00
