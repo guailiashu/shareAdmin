@@ -7,7 +7,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const route_1 = require("../route");
-const moment = require("moment");
 let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
     doAction(action, method, next) {
         switch (action) {
@@ -60,13 +59,11 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         let currentTime = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
         //昨天的起始时间 00:00:00
         let yesStart = currentTime - 24 * 60 * 60 * 1000;
-        console.log(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-        console.log(moment(yesStart).format('YYYY-MM-DD  HH:mm:ss'));
         let yesEnd = yesStart + 24 * 60 * 60 * 1000;
         //今天的起始时间 00:00:00
         let todayStart = currentTime;
         let todayEnd = todayStart + 24 * 60 * 60 * 1000;
-        let weekStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime() - 7 * 24 * 60 * 60 * 1000;
+        let weekStart = currentTime - 7 * 24 * 60 * 60 * 1000;
         let weekEnd = todayEnd;
         //console.log(`todayStart:${todayStart}, todayEnd:${todayEnd}`);
         let yesSignupCount = await this.db.userModel.find().where('createDt').gt(yesStart).lt(yesEnd).count().exec();
