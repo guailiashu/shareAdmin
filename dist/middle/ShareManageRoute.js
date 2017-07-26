@@ -45,14 +45,26 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         let todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
         let todayEnd = todayStart + 24 * 60 * 60 * 1000;
         //console.log(`todayStart:${todayStart}, todayEnd:${todayEnd}`);
-        //console.log(new Date(today.getFullYear(),today.getMonth(),today.getDate()));
         let yesSignupCount = await this.db.userModel.find().where('createDt').gt(yesStart).lt(yesEnd).count().exec();
         let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
+        let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(todayEnd).exec();
+        let activeUsers = [];
+        todayTaskRecords.forEach(record => {
+            //console.log(record.shareDetail[0].user);
+            if (activeUsers.includes(record.shareDetail[0].user)) {
+            }
+            else {
+                activeUsers.push(record.shareDetail[0].user);
+            }
+        });
+        let totalNum = await this.db.userModel.find().count();
         this.res.json({
             ok: true,
             data: {
                 yesSignupCount,
-                todaySignupCount
+                todaySignupCount,
+                activeUserNum: activeUsers.length,
+                totalNum
             }
         });
     }

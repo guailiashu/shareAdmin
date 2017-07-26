@@ -10,7 +10,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
                 return this.systemLog;
             case 'task-delete':
                 return this.taskDelete;
-            case 'task-edit': 
+            case 'task-edit':
                 return this.taskEdit;
             case 'taskTag-list':
                 return this.taskTagList;
@@ -42,17 +42,31 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
         let todayEnd = todayStart+24*60*60*1000;
 
         //console.log(`todayStart:${todayStart}, todayEnd:${todayEnd}`);
-        //console.log(new Date(today.getFullYear(),today.getMonth(),today.getDate()));
 
         let yesSignupCount = await this.db.userModel.find().where('createDt').gt(yesStart).lt(yesEnd).count().exec();
         let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
+        let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(todayEnd).exec();
+        let activeUsers = [];
+        
+        todayTaskRecords.forEach(record=>{
+            //console.log(record.shareDetail[0].user);
+            if(activeUsers.includes(record.shareDetail[0].user)){
+
+            }else{
+                activeUsers.push(record.shareDetail[0].user);
+            }
+        })
+        let totalNum = await this.db.userModel.find().count();
+
         this.res.json({
             ok:true,
             data:{
                 yesSignupCount,
-                todaySignupCount
+                todaySignupCount,
+                activeUserNum:activeUsers.length,
+                totalNum
             }
-        })    
+        })
     }
 
     async taskList(){
@@ -90,8 +104,8 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
 
     async taskTagEditPage(){
         let taskTag = await this.service.db.taskTagModel.findById(this.req.query._id).exec();
-        let subTasks = await this.service.db.taskModel.find({ taskTag: taskTag._id.toString() }).exec();
-        this.res.render('share-admin/taskTag-edit', { taskTag, subTasks });
+        let subTasks = await this.service.db.taskModel.find({taskTag:taskTag._id.toString()}).exec();
+        this.res.render('share-admin/taskTag-edit', {taskTag, subTasks});
     }
 
     login(){
@@ -104,7 +118,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
             };
             this.res.redirect('/share-admin/index')
         }else{
-            this.res.render('share-admin/login', {errorMsg: '用户名或密码不正确'});
+            this.res.render('share-admin/login', {errorMsg:'用户名或密码不正确'});
         }
     }
 
