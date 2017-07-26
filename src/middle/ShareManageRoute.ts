@@ -54,13 +54,14 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
 
     async systemLog(){
         let today = new Date();
+        let currentTime = new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime();
         //昨天的起始时间 00:00:00
-        let yesStart = new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime()-24*60*60*1000;
+        let yesStart = currentTime-24*60*60*1000;
         console.log(new Date(today.getFullYear(),today.getMonth(),today.getDate()));
         console.log(moment(yesStart).format('YYYY-MM-DD  HH:mm:ss'));
         let yesEnd = yesStart+24*60*60*1000;
         //今天的起始时间 00:00:00
-        let todayStart = new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime();
+        let todayStart = currentTime;
         let todayEnd = todayStart+24*60*60*1000;
         let weekStart = new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime()-7*24*60*60*1000;
         let weekEnd = todayEnd;
