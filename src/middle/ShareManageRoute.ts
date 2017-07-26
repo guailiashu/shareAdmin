@@ -43,9 +43,12 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
         //console.log(`todayStart:${todayStart}, todayEnd:${todayEnd}`);
         let yesSignupCount = await this.db.userModel.find().where('createDt').gt(yesStart).lt(yesEnd).count().exec();
         let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
-        let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(todayEnd).exec();
-        let activeUsers = [];
+        let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(todayStart).lt(todayEnd).exec();
+        let yesTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(yesEnd).exec();
         
+        let activeUsers = [];
+        let yesactiveUsers = [];
+
         todayTaskRecords.forEach(record=>{
             //console.log(record.shareDetail[0].user);
             if(activeUsers.includes(record.shareDetail[0].user)){
@@ -53,17 +56,24 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
             }else{
                 activeUsers.push(record.shareDetail[0].user);
             }
-        })
+        });
+        yesTaskRecords.forEach(yesrecord=>{
+            //console.log(record.shareDetail[0].user);
+            if(yesactiveUsers.includes(yesrecord.shareDetail[0].user)){
+
+            }else{
+                yesactiveUsers.push(yesrecord.shareDetail[0].user);
+            }
+        });
         let totalNum = await this.db.userModel.find().count();
-
-
-
+        
         this.res.json({
             ok:true,
             data:{
                 yesSignupCount, //昨日关注人数
                 todaySignupCount, //今日关注人数
-                activeUserNum:activeUsers.length, 
+                todayactiveUserNum:activeUsers.length, //今日活跃人数
+                yesactiveUserNum:yesactiveUsers.length, //昨日活跃人数
                 totalNum //累计关注人数
             }
         })
