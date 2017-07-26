@@ -29,7 +29,16 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
             case 'task-list':
                 return this.taskList;
             case 'recharge-list':
-                return this.rechargeList;
+                switch (method) {
+                    case 'get':
+                        return this.rechargeList;
+                    case 'post':
+                        return;
+                    case 'put':
+                        return;
+                    default:
+                        return this.rechargeList;
+                }
             default:
                 return this.index;
         }
@@ -39,9 +48,10 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
     }
     after() { }
     async rechargeList() {
+        var rechargeLists = await this.db.wxRechargeRecordModel.find().populate('user').sort({ createDt: -1 }).exec();
         this.res.json({
             ok: true,
-            data: 555
+            data: rechargeLists
         });
     }
     async systemLog() {
@@ -122,7 +132,6 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         var task = await this.service.db.taskModel.findById(_id).populate('taskTag').exec();
         var taskTags = await this.service.db.taskTagModel.find().exec();
         var taskRecords = await this.service.db.taskRecordModel.find({ task: task._id.toString() }).exec();
-        console.log(taskRecords);
         this.res.render('share-admin/task-edit', { task, taskRecords, taskTags });
     }
     async taskTagEdit() {

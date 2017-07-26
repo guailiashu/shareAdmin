@@ -15,7 +15,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
             case 'taskTag-list':
                 return this.taskTagList;
             case 'taskTag-edit':
-                return this.GET == method ? this.taskTagEditPage : this.taskTagEdit
+                return this.GET == method ? this.taskTagEditPage : this.taskTagEdit;
             case "taskTag-delete":
                 return this.taskTagDelete;
             case 'taskRecord-edit':
@@ -23,7 +23,16 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
             case 'task-list':
                 return this.taskList;
             case 'recharge-list':
-                return this.rechargeList;
+                switch(method){
+                    case 'get':
+                        return this.rechargeList;
+                    case 'post':
+                        return ;
+                    case 'put':
+                        return ;
+                    default:
+                        return this.rechargeList;
+                }
             default:
                 return this.index;
         }
@@ -35,12 +44,11 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
     after(){}
 
     async rechargeList(){
-
-
+        var rechargeLists = await this.db.wxRechargeRecordModel.find().populate('user').sort({createDt:-1}).exec();
 
         this.res.json({
             ok:true,
-            data:555
+            data:rechargeLists
         });
     }
 
@@ -129,9 +137,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
         var _id = this.req.query._id;
         var task = await this.service.db.taskModel.findById(_id).populate('taskTag').exec();
         var taskTags = await this.service.db.taskTagModel.find().exec();
-
         var taskRecords = await this.service.db.taskRecordModel.find({ task: task._id.toString() }).exec();
-        console.log(taskRecords);
         this.res.render('share-admin/task-edit', {task, taskRecords, taskTags});
     }
 
