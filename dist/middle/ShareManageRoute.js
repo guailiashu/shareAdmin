@@ -118,13 +118,13 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         });
     }
     async taskRecordEdit() {
-        var taskRecord = await this.service.db.taskRecordModel.findById(this.req.query._id).exec();
+        let taskRecord = await this.service.db.taskRecordModel.findById(this.req.query._id).exec();
         let orders = taskRecord.shareDetail;
         for (let order of orders) {
             let temp = await this.service.db.userModel.findById(order.user).exec();
             order.user = temp;
         }
-        var task = await this.service.db.taskModel.findById(taskRecord.task).exec();
+        let task = await this.service.db.taskModel.findById(taskRecord.task).exec();
         this.res.render('share-admin/taskRecord-edit', { taskRecord, task });
     }
     async taskEdit() {
