@@ -14,4 +14,4 @@ export var db = {
     taskRecordModel,
     wxGetMoneyRecordModel,
     wxRechargeRecordModel
-} 
+}
