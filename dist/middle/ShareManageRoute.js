@@ -32,6 +32,10 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
                 return this.index;
         }
     }
+    async taskList() {
+        let tasks = await this.db.taskModel.find(this.req.query).populate('publisher').exec();
+        this.res.json({ ok: true, data: tasks });
+    }
     before() {
         this.next();
     }
