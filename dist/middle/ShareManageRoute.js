@@ -59,7 +59,7 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         let currentTime = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
         //昨天的起始时间 00:00:00
         let yesStart = currentTime - 24 * 60 * 60 * 1000;
-        let yesEnd = yesStart + 24 * 60 * 60 * 1000;
+        let yesEnd = currentTime;
         //今天的起始时间 00:00:00
         let todayStart = currentTime;
         let todayEnd = todayStart + 24 * 60 * 60 * 1000;
