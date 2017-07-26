@@ -30,6 +30,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
     before(){
         this.next();
     }
+    
     after(){}
 
     async systemLog(){
