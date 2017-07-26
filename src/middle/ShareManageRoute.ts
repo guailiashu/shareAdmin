@@ -96,7 +96,6 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
 
     async taskList(){
         let tasks = await this.db.taskModel.find(this.req.query).populate('publisher').exec();
-        console.log(111,tasks);
         this.res.json({
             ok:true,
             data:tasks
