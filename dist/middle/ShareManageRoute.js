@@ -35,8 +35,7 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
     before() {
         this.next();
     }
-    after() {
-    }
+    after() { }
     async systemLog() {
         let today = new Date();
         //昨天的起始时间 00:00:00
@@ -65,7 +64,7 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
                 yesSignupCount,
                 todaySignupCount,
                 activeUserNum: activeUsers.length,
-                totalNum
+                totalNum //累计关注人数
             }
         });
     }

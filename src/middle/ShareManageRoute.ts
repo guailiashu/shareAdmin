@@ -40,9 +40,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
         //今天的起始时间 00:00:00
         let todayStart = new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime();
         let todayEnd = todayStart+24*60*60*1000;
-
         //console.log(`todayStart:${todayStart}, todayEnd:${todayEnd}`);
-
         let yesSignupCount = await this.db.userModel.find().where('createDt').gt(yesStart).lt(yesEnd).count().exec();
         let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
         let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(todayEnd).exec();
@@ -62,10 +60,10 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
         this.res.json({
             ok:true,
             data:{
-                yesSignupCount,
-                todaySignupCount,
-                activeUserNum:activeUsers.length,
-                totalNum
+                yesSignupCount, //昨日关注人数
+                todaySignupCount, //今日关注人数
+                activeUserNum:activeUsers.length, 
+                totalNum //累计关注人数
             }
         })
     }
