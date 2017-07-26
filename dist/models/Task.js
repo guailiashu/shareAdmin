@@ -19,7 +19,7 @@ var taskSchema = new mongoose.Schema({
      * 已经浏览过的ip
      */
     ips: { type: [String], default: [] },
-    users: { type: [mongoose.Schema.Types.ObjectId], default: [] },
+    users: { type: [mongoose.Schema.Types.ObjectId], ref: 'User', default: [] },
     active: { type: Boolean, default: false },
     msg: { type: String, default: '正在审核中' }
 });

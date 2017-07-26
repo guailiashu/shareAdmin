@@ -1,14 +1,18 @@
 import mongoose = require('mongoose');
-import { CONFIG } from '../services/config';
 import { taskModel } from './Task';
 import { userModel } from './User';
 import { taskTagModel } from './TaskTag';
 import { taskRecordModel } from './TaskRecord';
-mongoose.connect(CONFIG.mongodb || 'mongodb://localhost:27017/test');
+import { wxRechargeRecordModel } from './WXRechargeRecord';
+import { wxGetMoneyRecordModel } from './WXGetMoneyRecord';
+mongoose.connect('mongodb://47.92.87.28 :27017/test');
+
 
 export var db = {
     userModel,
     taskModel,
     taskTagModel,
-    taskRecordModel
+    taskRecordModel,
+    wxGetMoneyRecordModel,
+    wxRechargeRecordModel
 }

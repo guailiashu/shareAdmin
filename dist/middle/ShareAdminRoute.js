@@ -16,17 +16,46 @@ let ShareAdminRoute = class ShareAdminRoute extends route_1.Route.BaseRoute {
             case 'task-delete': return this.taskDelete;
             case 'task-edit': return this.taskEdit;
             case 'taskTag-list': return this.taskTagList; //栏目信息
-            case 'taskTag': switch (method) {
-                case 'get': return this.taskTagDetail;
-                case 'post': return this.taskTagNew;
-                case 'put': return this.taskTagUpdate;
-                default: return this.taskTagDelete; //删除
-            }
+            case 'taskTag':
+                switch (method) {
+                    case 'get': return this.taskTagDetail;
+                    case 'post': return this.taskTagNew;
+                    case 'put': return this.taskTagUpdate;
+                    default: return this.taskTagDelete; //删除
+                }
+                ;
             //case "taskTag-delete": return this.taskTagDelete;
             case 'taskRecord-edit': return this.taskRecordEdit;
             case 'task-list': return this.taskList;
+            case 'rechargeRecord-list': return this.rechargeRecordlist; //充值记录
+            case "task-by-taskTag": return this.taskBytaskTag;
+            case "task": return this.updateTask; //put请求
             default: return this.index;
         }
+    }
+    async updateTask() {
+        let _id = this.req.query._id;
+        let modfiyTask = await this.db.taskModel.findByIdAndUpdate(_id, this.req.body).exec();
+        this.res.json({
+            ok: true,
+            data: modfiyTask
+        });
+    }
+    async rechargeRecordlist() {
+    }
+    async taskBytaskTag() {
+        let { active, taskTag } = this.req.query;
+        let tasks = [];
+        if (active) {
+            tasks = await this.db.taskModel.find({ active, taskTag }).populate('publisher').exec();
+        }
+        else {
+            tasks = await this.db.taskModel.find({ taskTag }).populate('publisher').exec();
+        }
+        this.res.json({
+            ok: true,
+            data: tasks,
+        });
     }
     async taskTagDetail() {
         let taskTag = await this.db.taskTagModel.findById({ _id: this.req.query._id }).exec();
@@ -36,7 +65,7 @@ let ShareAdminRoute = class ShareAdminRoute extends route_1.Route.BaseRoute {
                 ok: true,
                 data: {
                     taskTag,
-                    subTasks
+                    subTasks,
                 }
             });
         }
@@ -48,42 +77,20 @@ let ShareAdminRoute = class ShareAdminRoute extends route_1.Route.BaseRoute {
         }
     }
     async taskTagNew() {
-        let taskTag = await this.db.taskTagModel.findById({ _id: this.req.query._id }).exec();
-        let subTasks = await this.db.taskModel.find({ taskTag: taskTag._id.toString() }).exec(); //子栏目
-        if (taskTag) {
-            this.res.json({
-                ok: true,
-                data: {
-                    taskTag,
-                    subTasks
-                }
-            });
-        }
-        else {
-            this.res.json({
-                ok: false,
-                data: '该栏目不存在,请传入参数正确的id'
-            });
-        }
+        let { name, sort } = await this.req.body;
+        let newTaskTag = await new this.db.taskTagModel({ name: name, sort: sort }).save();
+        this.res.json({
+            ok: true,
+            data: newTaskTag
+        });
     }
     async taskTagUpdate() {
-        let taskTag = await this.db.taskTagModel.findById({ _id: this.req.query._id }).exec();
-        let subTasks = await this.db.taskModel.find({ taskTag: taskTag._id.toString() }).exec(); //子栏目
-        if (taskTag) {
-            this.res.json({
-                ok: true,
-                data: {
-                    taskTag,
-                    subTasks
-                }
-            });
-        }
-        else {
-            this.res.json({
-                ok: false,
-                data: '该栏目不存在,请传入参数正确的id'
-            });
-        }
+        let _id = await this.req.query._id;
+        let updateResult = await this.db.taskTagModel.findByIdAndUpdate(_id, this.req.body).exec();
+        this.res.json({
+            ok: true,
+            data: updateResult
+        });
     }
     async taskTagDelete(req, res) {
         let taskTag = await this.db.taskTagModel.findById(this.req.query._id).exec();
@@ -91,7 +98,7 @@ let ShareAdminRoute = class ShareAdminRoute extends route_1.Route.BaseRoute {
         if (subTaskCount > 0) {
             res.json({
                 ok: false,
-                data: '请先该栏目下的子任务'
+                data: '请先删除该栏目下的子任务'
             });
         }
         else {
@@ -147,6 +154,7 @@ let ShareAdminRoute = class ShareAdminRoute extends route_1.Route.BaseRoute {
         var _id = this.req.query._id;
         var task = await this.service.db.taskModel.findById(_id).populate('taskTag').exec();
         var taskTags = await this.service.db.taskTagModel.find().exec();
+        //var taskTags = await this.service.db.taskTagModel.find().exec();
         var taskRecords = await this.service.db.taskRecordModel.find({ task: task._id.toString() }).exec();
         console.log(taskRecords);
         this.res.render('share-admin/task-edit', { task, taskRecords, taskTags });
@@ -194,7 +202,7 @@ let ShareAdminRoute = class ShareAdminRoute extends route_1.Route.BaseRoute {
         res.redirect(`/share-admin/task-list`);
     }
     async taskTagList() {
-        var taskTags = await this.db.taskTagModel.find().exec();
+        var taskTags = await this.db.taskTagModel.find().sort({ sort: -1 }).exec();
         var taskNums = [];
         for (let taskTag of taskTags) {
             taskTag = taskTag._id.toString();
