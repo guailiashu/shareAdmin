@@ -38,7 +38,6 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
                 return this.index;
         }
     }
-
     before(){
         this.next();
     }
@@ -107,8 +106,8 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
             data:{
                 yesSignupCount,  //昨日关注人数
                 todaySignupCount,  //今日关注人数
-                todayActiveUserNum:activeUsers.length,  //今日活跃人数
                 yesActiveUserNum:yesActiveUsers.length,  //昨日活跃人数
+                todayActiveUserNum:activeUsers.length,  //今日活跃人数
                 weekActiveUserNum:weekActiveUsers.length,  //本周活跃人数
                 totalNum  //累计关注人数
             }

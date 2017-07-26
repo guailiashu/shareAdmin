@@ -104,8 +104,8 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
             data: {
                 yesSignupCount,
                 todaySignupCount,
-                todayActiveUserNum: activeUsers.length,
                 yesActiveUserNum: yesActiveUsers.length,
+                todayActiveUserNum: activeUsers.length,
                 weekActiveUserNum: weekActiveUsers.length,
                 totalNum //累计关注人数
             }
