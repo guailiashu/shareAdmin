@@ -89,7 +89,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
                 todayActiveUserNum:activeUsers.length,  //今日活跃人数
                 yesActiveUserNum:yesActiveUsers.length,  //昨日活跃人数
                 weekActiveUserNum:weekActiveUsers.length,  //本周活跃人数
-                totalNum  //累计关注人数
+                totalNum //累计关注人数
             }
         })
     }
