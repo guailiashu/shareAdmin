@@ -105,7 +105,7 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
                 yesActiveUserNum: yesActiveUsers.length,
                 todayActiveUserNum: activeUsers.length,
                 weekActiveUserNum: weekActiveUsers.length,
-                totalNum //累计关注人数
+                totalNum //用户总数
             }
         });
     }

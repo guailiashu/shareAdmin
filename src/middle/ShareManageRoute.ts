@@ -2,9 +2,9 @@ import {Route, RequestHandler, Request, Response} from '../route';
 import moment = require('moment');
 
 @Route.Views('share-manage')
-export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
-    doAction(action: string, method: string, next: RequestHandler) {
-        switch (action) {
+export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
+    doAction(action: string, method: string, next: RequestHandler){
+        switch(action){
             case 'login':
                 return this.GET == method ? this.loginPage : this.login;
             case 'system-log':
@@ -102,12 +102,12 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
         this.res.json({
             ok:true,
             data:{
-                yesSignupCount,  //昨日关注人数
-                todaySignupCount,  //今日关注人数
+                yesSignupCount,  //昨日注册人数
+                todaySignupCount,  //今日注册人数
                 yesActiveUserNum:yesActiveUsers.length,  //昨日活跃人数
                 todayActiveUserNum:activeUsers.length,  //今日活跃人数
                 weekActiveUserNum:weekActiveUsers.length,  //本周活跃人数
-                totalNum  //累计关注人数
+                totalNum  //用户总数
             }
         })
     }
