@@ -32,7 +32,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
                     case 'put':
                         return ;
                     default:
-                        return this.rechargeList;
+                        return ;
                 }
             default:
                 return this.index;
@@ -149,7 +149,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
         this.res.render('share-admin/taskTag-edit', {taskTag, subTasks});
     }
 
-    login() {
+    login(){
         let {username, password} = this.req.body;
         console.log(username, password);
         if(username == 'admin' && password == '123'){
