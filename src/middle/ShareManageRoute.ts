@@ -131,7 +131,6 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
         var task = await this.service.db.taskModel.findById(taskRecord.task).exec();
         this.res.render('share-admin/taskRecord-edit', {taskRecord, task});
     }
-
     async taskEdit(){
         var _id = this.req.query._id;
         var task = await this.service.db.taskModel.findById(_id).populate('taskTag').exec();
@@ -140,19 +139,16 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
         console.log(taskRecords);
         this.res.render('share-admin/task-edit', {task, taskRecords, taskTags});
     }
-    
     async taskTagEdit(){
         let {_id, name, sort} = this.req.body;
         await this.service.db.taskTagModel.findByIdAndUpdate(_id, {$set:{name,sort}}).exec();
         this.res.redirect('/share-admin/taskTag-list');
     }
-
     async taskTagEditPage(){
         let taskTag = await this.service.db.taskTagModel.findById(this.req.query._id).exec();
         let subTasks = await this.service.db.taskModel.find({taskTag:taskTag._id.toString()}).exec();
         this.res.render('share-admin/taskTag-edit', {taskTag, subTasks});
     }
-
     login(){
         let {username, password} = this.req.body;
         console.log(username, password);
@@ -166,11 +162,9 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
             this.res.render('share-admin/login', {errorMsg: '用户名或密码不正确'});
         }
     }
-   
     loginPage(){
         this.res.render('share-admin/login');
     }
-
     async index(req: Request, res: Response) {
         // 任务标签总数
         var taskTagNum = await this.service.db.taskTagModel.find().count().exec();
@@ -180,18 +174,15 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
         var recordNum = await this.service.db.taskRecordModel.find().count().exec();
         this.res.render(`share-admin/index`, {taskTagNum, taskNum, taskActiveNum, recordNum});
     }
-
     async taskTagDelete(req: Request, res: Response) {
         let action = await this.service.db.taskTagModel.findByIdAndRemove(req.query._id).exec();
         res.redirect(`/share-admin/taskTag-list`);
     }
-
     async taskDelete(req: Request, res: Response) {
         var _id = req.query._id;
         let action = await this.service.db.taskModel.findByIdAndRemove(_id).exec();
         res.redirect(`/share-admin/task-list`);
     }
-
     async taskTagList() {
         var taskTags = await this.db.taskTagModel.find().exec();
         var taskNums = [];
@@ -202,7 +193,6 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
         }
         this.render('taskTag-list', { taskTags, taskNums });
     }
-
     async taskTagNewPageDo(req: Request, res: Response) {
         let {name} = req.body;
         let newTaskTag = await new this.service.db.taskTagModel({name}).save();
