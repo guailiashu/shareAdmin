@@ -79,21 +79,22 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         let yesTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(yesEnd).exec();
         let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(todayStart).lt(todayEnd).exec();
         let weekTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(weekStart).lt(weekEnd).exec();
+        // let tests = await this.db.userModel.find({historyMoney:0.2, isFinish:false}).exec();
         let yesActiveUsers = []; //昨日活跃
         let activeUsers = []; //今日活跃
         let weekActiveUsers = []; //本周活跃
-        todayTaskRecords.forEach(record => {
-            if (activeUsers.includes(record.shareDetail[0].user)) {
-            }
-            else {
-                activeUsers.push(record.shareDetail[0].user);
-            }
-        });
         yesTaskRecords.forEach(yesRecord => {
             if (yesActiveUsers.includes(yesRecord.shareDetail[0].user)) {
             }
             else {
                 yesActiveUsers.push(yesRecord.shareDetail[0].user);
+            }
+        });
+        todayTaskRecords.forEach(record => {
+            if (activeUsers.includes(record.shareDetail[0].user)) {
+            }
+            else {
+                activeUsers.push(record.shareDetail[0].user);
             }
         });
         weekTaskRecords.forEach(weekRecord => {
