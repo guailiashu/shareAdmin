@@ -57,7 +57,7 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
     async systemLog() {
         let today = new Date();
         let currentTime = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
-        //console.log(new Date(today.getFullYear(),today.getMonth(),today.getDate()));
+        console.log(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
         //今天的起始时间 00:00:00
         let todayStart = currentTime;
         let todayEnd = todayStart + 24 * 60 * 60 * 1000;

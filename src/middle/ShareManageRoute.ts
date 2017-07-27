@@ -54,7 +54,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
     async systemLog(){
         let today = new Date();
         let currentTime = new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime();
-        //console.log(new Date(today.getFullYear(),today.getMonth(),today.getDate()));
+        console.log(new Date(today.getFullYear(),today.getMonth(),today.getDate()));
         //今天的起始时间 00:00:00
         let todayStart = currentTime;
         let todayEnd = todayStart+24*60*60*1000;
@@ -63,7 +63,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
         let yesEnd = currentTime;
         let weekStart = currentTime-7*24*60*60*1000;
         let weekEnd = todayEnd;
-        
+
         //console.log(`todayStart:${todayStart}, todayEnd:${todayEnd}`);
         let yesSignupCount = await this.db.userModel.find().where('createDt').gt(yesStart).lt(yesEnd).count().exec();
         let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
