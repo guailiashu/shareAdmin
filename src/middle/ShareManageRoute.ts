@@ -63,7 +63,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
         let yesEnd = currentTime;
         let weekStart = currentTime-7*24*60*60*1000;
         let weekEnd = todayEnd;
-
+        
         //console.log(`todayStart:${todayStart}, todayEnd:${todayEnd}`);
         let yesSignupCount = await this.db.userModel.find().where('createDt').gt(yesStart).lt(yesEnd).count().exec();
         let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
