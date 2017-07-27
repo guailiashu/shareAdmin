@@ -52,28 +52,40 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
     }
 
     async systemLog(){
-        let today = new Date();
-        let currentTime = new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime();
-        console.log(new Date(today.getFullYear(),today.getMonth(),today.getDate()));
-        //今天的起始时间 00:00:00
-        let todayStart = currentTime;
-        let todayEnd = todayStart+24*60*60*1000;
-        //昨天的起始时间 00:00:00
-        let yesStart = currentTime-24*60*60*1000;
+        let day = new Date();
+        let currentTime = new Date(day.getFullYear(),day.getMonth(),day.getDate()).getTime();  //今日的起始时间
+        // console.log(new Date(new Date().getTime() + 28800000));
+        // console.log(111, new Date(today.getFullYear(),today.getMonth(),today.getDate()));
+        // console.log(333, new Date(currentTime+28800000));
+
+        // 昨日的起始时间 00:00:00
+        let yesStart = currentTime-1*24*60*60*1000;
         let yesEnd = currentTime;
+
+        //今日的起始时间 00:00:00
+        let todayStart = currentTime;
+        let todayEnd = todayStart+1*24*60*60*1000;
+
+        //上周的起始时间
+
+        //本周的起始时间
         let weekStart = currentTime-7*24*60*60*1000;
         let weekEnd = todayEnd;
 
         //console.log(`todayStart:${todayStart}, todayEnd:${todayEnd}`);
+        //昨日注册人数
         let yesSignupCount = await this.db.userModel.find().where('createDt').gt(yesStart).lt(yesEnd).count().exec();
+        //今日注册人数
         let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
-        let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(todayStart).lt(todayEnd).exec();
+
+        // 活跃的结果集, 数据类型
         let yesTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(yesEnd).exec();
+        let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(todayStart).lt(todayEnd).exec();
         let weekTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(weekStart).lt(weekEnd).exec();
         
-        let activeUsers = [];
-        let yesActiveUsers = [];
-        let weekActiveUsers = [];
+        let yesActiveUsers = [];  //昨日活跃
+        let activeUsers = [];  //今日活跃
+        let weekActiveUsers = [];  //本周活跃
 
         todayTaskRecords.forEach(record=>{
             if(activeUsers.includes(record.shareDetail[0].user)){
@@ -116,6 +128,10 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
         let tasks = await this.db.taskModel.find(this.req.query).populate('publisher').exec();
         this.res.json({ok:true, data:tasks});
     }
+
+
+
+
 
 
 
