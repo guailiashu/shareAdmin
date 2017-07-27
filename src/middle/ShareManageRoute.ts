@@ -117,6 +117,10 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
         this.res.json({ok:true, data:tasks});
     }
 
+
+
+
+
     async taskRecordEdit(){
         let taskRecord = await this.service.db.taskRecordModel.findById(this.req.query._id).exec();
         let orders = taskRecord.shareDetail;

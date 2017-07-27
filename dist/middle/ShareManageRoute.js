@@ -28,6 +28,17 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
                 return this.taskRecordEdit;
             case 'task-list':
                 return this.taskList;
+            case 'recharge-list':
+                switch (method) {
+                    case 'get':
+                        return this.rechargeList;
+                    case 'post':
+                        return;
+                    case 'put':
+                        return;
+                    default:
+                        return;
+                }
             default:
                 return this.index;
         }
@@ -36,16 +47,26 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         this.next();
     }
     after() { }
+    async rechargeList() {
+        let rechargeLists = await this.db.wxRechargeRecordModel.find().populate('user').sort({ createDt: -1 }).exec();
+        this.res.json({
+            ok: true,
+            data: rechargeLists
+        });
+    }
     async systemLog() {
         let today = new Date();
         let currentTime = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
-        console.log(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
-        //昨天的起始时间 00:00:00
-        let yesStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime() - 24 * 60 * 60 * 1000;
-        let yesEnd = yesStart + 24 * 60 * 60 * 1000;
+        //console.log(new Date(today.getFullYear(),today.getMonth(),today.getDate()));
         //今天的起始时间 00:00:00
-        let todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+        let todayStart = currentTime;
         let todayEnd = todayStart + 24 * 60 * 60 * 1000;
+        //昨天的起始时间 00:00:00
+        let yesStart = currentTime - 24 * 60 * 60 * 1000;
+        let yesEnd = currentTime;
+        let weekStart = currentTime - 7 * 24 * 60 * 60 * 1000;
+        let weekEnd = todayEnd;
+        //console.log(`todayStart:${todayStart}, todayEnd:${todayEnd}`);
         let yesSignupCount = await this.db.userModel.find().where('createDt').gt(yesStart).lt(yesEnd).count().exec();
         let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
         let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(todayStart).lt(todayEnd).exec();
@@ -55,7 +76,6 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         let yesActiveUsers = [];
         let weekActiveUsers = [];
         todayTaskRecords.forEach(record => {
-            //console.log(record.shareDetail[0].user);
             if (activeUsers.includes(record.shareDetail[0].user)) {
             }
             else {
@@ -63,7 +83,6 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
             }
         });
         yesTaskRecords.forEach(yesRecord => {
-            //console.log(record.shareDetail[0].user);
             if (yesActiveUsers.includes(yesRecord.shareDetail[0].user)) {
             }
             else {
@@ -71,7 +90,6 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
             }
         });
         weekTaskRecords.forEach(weekRecord => {
-            //console.log(record.shareDetail[0].user);
             if (weekActiveUsers.includes(weekRecord.shareDetail[0].user)) {
             }
             else {
@@ -83,7 +101,11 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
             ok: true,
             data: {
                 yesSignupCount,
-                todaySignupCount
+                todaySignupCount,
+                yesActiveUserNum: yesActiveUsers.length,
+                todayActiveUserNum: activeUsers.length,
+                weekActiveUserNum: weekActiveUsers.length,
+                totalNum //累计关注人数
             }
         });
     }
@@ -92,7 +114,7 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         this.res.json({ ok: true, data: tasks });
     }
     async taskRecordEdit() {
-        var taskRecord = await this.service.db.taskRecordModel.findById(this.req.query._id).exec();
+        let taskRecord = await this.service.db.taskRecordModel.findById(this.req.query._id).exec();
         let orders = taskRecord.shareDetail;
         for (let order of orders) {
             let temp = await this.service.db.userModel.findById(order.user).exec();

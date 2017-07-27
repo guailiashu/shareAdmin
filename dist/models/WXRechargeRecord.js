@@ -10,6 +10,7 @@ var wxRechargeRecordSchema = new mongoose.Schema({
     openid: String,
     trade_type: { type: String, default: 'JSAPI' },
     createDt: { type: Date, default: Date.now },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     //是否已经退款
     isRefund: { type: Boolean, default: false }
 });
