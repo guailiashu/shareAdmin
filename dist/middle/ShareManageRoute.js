@@ -29,16 +29,7 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
             case 'task-list':
                 return this.taskList;
             case 'recharge-list':
-                switch (method) {
-                    case 'get':
-                        return this.rechargeList;
-                    case 'post':
-                        return;
-                    case 'put':
-                        return;
-                    default:
-                        return;
-                }
+                return this.rechargeList;
             default:
                 return this.index;
         }
@@ -60,7 +51,10 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         let count = await this.db.wxRechargeRecordModel.find().count().exec();
         this.res.json({
             ok: true,
-            data: { rechargeLists, count }
+            data: {
+                rechargeLists,
+                count
+            }
         });
     }
     async systemLog() {

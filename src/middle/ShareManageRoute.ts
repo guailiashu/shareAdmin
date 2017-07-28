@@ -28,11 +28,11 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
                     case 'get':
                         return this.rechargeList;
                     case 'post':
-                        return;
+                        return ;
                     case 'put':
-                        return;
+                        return ;
                     default:
-                        return;
+                        return ;
                 }
             default:
                 return this.index;
@@ -52,11 +52,14 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
         //     data:{users,count}
         // });
         let page = this.req.query.page || 0;
-        let rechargeLists = await this.db.wxRechargeRecordModel.find().skip(10*page).limit(10).populate('user').sort({createDt:-1}).exec();
+        let rechargeLists = await this.db.wxRechargeRecordModel.find().skip(page*10).limit(10).populate('user').sort({createDt:-1}).exec();
         let count = await this.db.wxRechargeRecordModel.find().count().exec();
         this.res.json({
             ok:true,
-            data:{rechargeLists,count}
+            data:{
+                rechargeLists,
+                count
+            }
         });
     }
 
