@@ -75,7 +75,7 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         let yesSignupCount = await this.db.userModel.find().where('createDt').gt(yesStart).lt(yesEnd).count().exec();
         //今日注册人数
         let todaySignupCount = await this.db.userModel.find().where('createDt').gt(todayStart).lt(todayEnd).count().exec();
-        // 活跃的结果集, 数据类型
+        // 活跃的结果集, 数组类型
         let yesTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(yesStart).lt(yesEnd).exec();
         let todayTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(todayStart).lt(todayEnd).exec();
         let weekTaskRecords = await this.db.taskRecordModel.find().where('createDt').gt(weekStart).lt(weekEnd).exec();
@@ -151,7 +151,6 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
     }
     login() {
         let { username, password } = this.req.body;
-        console.log(username, password);
         if (username == 'admin' && password == '123') {
             this.req.session.admin = {
                 username,
