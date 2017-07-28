@@ -48,10 +48,19 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
     }
     after() { }
     async rechargeList() {
-        let rechargeLists = await this.db.wxRechargeRecordModel.find().populate('user').sort({ createDt: -1 }).exec();
+        // let page = this.req.query.page || 0;
+        // let users = await this.db.userModel.find().skip(10*page).limit(10).exec();
+        // let count = await this.db.userModel.find().count().exec();
+        // this.res.json({
+        //     ok:true,
+        //     data:{users,count}
+        // });
+        let page = this.req.query.page || 0;
+        let rechargeLists = await this.db.wxRechargeRecordModel.find().skip(10 * page).limit(10).populate('user').sort({ createDt: -1 }).exec();
+        let count = await this.db.wxRechargeRecordModel.find().count().exec();
         this.res.json({
             ok: true,
-            data: rechargeLists
+            data: { rechargeLists, count }
         });
     }
     async systemLog() {
