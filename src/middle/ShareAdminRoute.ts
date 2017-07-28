@@ -7,7 +7,7 @@ export class ShareAdminRoute extends Route.BaseRoute implements Route.IRoute {
             case 'user-list': return this.userList;//分页
             //case 'user': return this.user;//用户页，删除 
             case 'user': switch (method) {//用户页面
-                case 'get': return this.getUser;
+                case 'get': return this.getUser;//用户支付
                 case 'post': return this.taskTagNew;
                 case 'put': return this.putUser;//编辑 
                 default: return this.user;
@@ -43,17 +43,63 @@ export class ShareAdminRoute extends Route.BaseRoute implements Route.IRoute {
         })
     }
 
-
     async getUser() {//get请求
+        //5979aa66f97b400ef876681d
         let _id = this.req.query._id;
-        let editUser = await this.db.userModel.findById(_id).exec();//返回数据
+
+        let user = await this.db.userModel.findById(_id).exec();//返回数据     
+        let tasks = await this.db.taskModel.find({ publisher: user._id.toString() }).exec();//子栏目
+        let getMoneyRequests = await this.db.getMoneyRequestModel.find({ user: _id }).populate('user').exec();
+        let tree = {
+            level1Parent: null,
+            level2Parent: null,
+            level3Parent: null,
+            level1Children: [],
+            level2Children: [],
+            level3Children: [],
+
+        }
+
+        //查上三级
+        if (user.parent) {
+            await user.populate('parent').execPopulate();
+            tree.level1Parent = user.parent;
+            if (user.parent.parent) {
+                await user.parent.populate('parent').execPopulate();;
+                tree.level2Parent = user.parent.parent;
+                if (user.parent.parent.parent) {
+                    await user.parent.parent.populate('parent').execPopulate();;
+                    tree.level3Parent = user.parent.parent.parent;
+                }
+            }
+        }
+        // 查下三级
+        tree.level1Children = await this.db.userModel.find({ parent: _id }).exec();
+
+        if (tree.level1Children.length > 0) {
+            let childrenIds = tree.level1Children.map(child => child._id.toString());
+
+            tree.level2Children = await this.db.userModel.find({ parent: { $in: childrenIds } }).exec();
+            childrenIds = tree.level2Children.map(child => child._id.toString());
+            tree.level3Children = await this.db.userModel.find({ parent: { $in: childrenIds } }).exec();
+        }
+
+
+
+
+
         this.res.json({
             ok: true,
-            data: editUser
+            data:
+            {
+                user,
+                tasks,
+                getMoneyRequests,
+                tree
+            }
+
         })
     }
-
-
 
     async putUser() {//put请求
         let _id = this.req.query._id;
@@ -159,7 +205,7 @@ export class ShareAdminRoute extends Route.BaseRoute implements Route.IRoute {
 
     async userList() {//分页
         let page = this.req.query.page || 0;
-        let users = await this.db.userModel.find().skip(10 * page).limit(10).exec();
+        let users = await this.db.userModel.find().skip(page * 10).limit(10).exec();//分页
         let count = await this.db.userModel.find().count().exec();
         this.res.json({ ok: true, data: { users, count } });
     }
