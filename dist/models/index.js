@@ -7,6 +7,7 @@ const TaskTag_1 = require("./TaskTag");
 const TaskRecord_1 = require("./TaskRecord");
 const WXRechargeRecord_1 = require("./WXRechargeRecord");
 const WXGetMoneyRecord_1 = require("./WXGetMoneyRecord");
+const GetMoneyRequest_1 = require("./GetMoneyRequest");
 mongoose.connect('mongodb://47.92.87.28 :27017/test');
 exports.db = {
     userModel: User_1.userModel,
@@ -14,5 +15,6 @@ exports.db = {
     taskTagModel: TaskTag_1.taskTagModel,
     taskRecordModel: TaskRecord_1.taskRecordModel,
     wxGetMoneyRecordModel: WXGetMoneyRecord_1.wxGetMoneyRecordModel,
-    wxRechargeRecordModel: WXRechargeRecord_1.wxRechargeRecordModel
+    wxRechargeRecordModel: WXRechargeRecord_1.wxRechargeRecordModel,
+    getMoneyRequestModel: GetMoneyRequest_1.getMoneyRequestModel
 };
