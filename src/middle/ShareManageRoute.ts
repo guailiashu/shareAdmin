@@ -42,7 +42,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
         this.next();
     }
     after(){}
-    
+
     async rechargeList(){
         // let page = this.req.query.page || 0;
         // let users = await this.db.userModel.find().skip(10*page).limit(10).exec();
