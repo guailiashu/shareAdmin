@@ -1,10 +1,10 @@
-import { Route, RequestHandler, Request, Response } from '../route';
+import {Route, RequestHandler, Request, Response} from '../route';
 import moment = require('moment');
 
 @Route.Views('share-manage')
-export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
+export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
     doAction(action: string, method: string, next: RequestHandler){
-        switch (action) {
+        switch(action){
             case 'login':
                 return this.GET == method ? this.loginPage : this.login;
             case 'system-log':
@@ -24,7 +24,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
             case 'task-list':
                 return this.taskList;
             case 'recharge-list':
-                switch (method) {
+                switch(method){
                     case 'get':
                         return this.rechargeList;
                     case 'post':
@@ -38,12 +38,12 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute {
                 return this.index;
         }
     }
-    before() {
+    before(){
         this.next();
     }
-    after() { }
+    after(){}
 
-    async rechargeList() {
+    async rechargeList(){
         let rechargeLists = await this.db.wxRechargeRecordModel.find().populate('user').sort({ createDt: -1 }).exec();
         this.res.json({
             ok: true,
