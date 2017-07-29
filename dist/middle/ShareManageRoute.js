@@ -29,7 +29,16 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
             case 'task-list':
                 return this.taskList;
             case 'recharge-list':
-                return this.rechargeList;
+                switch (method) {
+                    case 'get':
+                        return this.rechargeList;
+                    case 'post':
+                        return;
+                    case 'put':
+                        return;
+                    default:
+                        return;
+                }
             default:
                 return this.index;
         }
@@ -47,7 +56,7 @@ let ShareManageRoute = class ShareManageRoute extends route_1.Route.BaseRoute {
         //     data:{users,count}
         // });
         let page = this.req.query.page || 0;
-        let rechargeLists = await this.db.wxRechargeRecordModel.find().skip(10 * page).limit(10).populate('user').sort({ createDt: -1 }).exec();
+        let rechargeLists = await this.db.wxRechargeRecordModel.find().skip(page * 30).limit(30).populate('user').sort({ createDt: -1 }).exec();
         let count = await this.db.wxRechargeRecordModel.find().count().exec();
         this.res.json({
             ok: true,
