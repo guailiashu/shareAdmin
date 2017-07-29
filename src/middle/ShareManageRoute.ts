@@ -51,6 +51,7 @@ export class ShareManageRoute extends Route.BaseRoute implements Route.IRoute{
         //     ok:true,
         //     data:{users,count}
         // });
+        
         let page = this.req.query.page || 0;
         let rechargeLists = await this.db.wxRechargeRecordModel.find().skip(page*10).limit(10).populate('user').sort({createDt:-1}).exec();
         let count = await this.db.wxRechargeRecordModel.find().count().exec();
